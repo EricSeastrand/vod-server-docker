@@ -44,10 +44,13 @@ class ApiRouter {
 
 class ApiHandlers {
 	static function getFiles() {
-		$path = __DIR__ . '/video_files/*.{mp4,mov}';
+		$path = __DIR__ . '/video_files/*.';
 		$currentTime=time();
 
-		$files = glob($path);
+		$files = array_merge(
+			glob($path . 'mp4'),
+			glob($path . 'mov')
+		);
 		
 		$filesDetails = array_map(function($file) use ($currentTime){
 			$video = new VideoFile($file);
