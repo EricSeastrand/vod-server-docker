@@ -4,7 +4,7 @@ server {
 
 	listen 443 ssl;
 
-	root /vod-server/nginx_www;
+	root /vod-server-webapp/nginx_www;
 	index index.html index.htm index.php;
 
 	server_name _;
