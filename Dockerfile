@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:stable
 
 
 RUN \
