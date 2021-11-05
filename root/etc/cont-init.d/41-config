@@ -1,3 +1,5 @@
 #!/usr/bin/with-contenv bash
 
 cp -r /nginx-configs/* /config
+
+chown -R 1000:1000 /vod-server-webapp
