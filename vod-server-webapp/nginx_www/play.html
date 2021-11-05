@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+<title>Def's VoD - Player</title>
+<style>
+	body {
+		background:  black;
+		margin:  0;
+	}
+	* {
+		font-family:  sans-serif;
+	}
+	video {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+	#video-wrap {
+		background: black;
+	}
+	.keyboard-shortcuts, .multi-angle-video {
+	    color: white;
+	    position: absolute;
+		background: #404040;
+		padding: 6px;
+		border: 1px solid white;
+	}
+	.multi-angle-video {
+		top: 0;
+	    left: 0;
+		border-radius: 0 0 3px 0;
+		border-top: none;
+		border-left: none;
+	}
+	.keyboard-shortcuts {
+	    top: 0;
+	    right: 0;
+		border-top: none;
+		border-right: none;
+		border-radius: 0 0 0 3px;
+	}
+
+	.keyboard-shortcuts:not(:hover) {
+	    opacity: 0.5;
+	}
+
+	kbd {
+	    background-color: #eee;
+	    border-radius: 3px;
+	    border: 1px solid #b4b4b4;
+	    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+	    color: #333;
+	    display: inline-block;
+	    font-size: .85em;
+	    font-weight: 700;
+	    line-height: 1;
+	    padding: 2px 4px;
+	    white-space: nowrap;
+	}
+	.multi-angle-video__selector {
+	    display: flex;
+	    cursor: pointer;
+	}
+	.multi-angle-video__selector.unavailable {
+	    cursor: not-allowed;
+	}
+
+
+</style>
+
+<div id="video-wrap">
+<video id="player" controls>
+	<source src="" />
+</video>
+<details class="keyboard-shortcuts">
+<summary>Keyboard Shortcuts (Click Me)</summary>
+<kbd>B</kbd>: Skip Backwards<br/>
+<kbd>N</kbd>: Skip Forward [think N for "next"]<br/>
+<br/>
+Speed<br/>
+<kbd>S</kbd>: Slower<br/>
+<kbd>F</kbd>: Faster<br/>
+Optionally: Pause before hitting <kbd>F</kbd>/<kbd>S</kbd> and video will re-pause when you release key.
+<br><br>
+Tip: Hold <kbd>Shift</kbd> with any shortcut to make it more extreme.
+</details>
+
+</div>
+
+<script>
+
+	let player = document.getElementById("player")
+	let source = player.querySelector('source')
+	var playerWasPaused = true;
+
+	var urlParams = new URLSearchParams(window.location.hash.replace("#","?"));
+	var videoPath = urlParams.get('video');
+
+	if(!videoPath) {
+		console.warn("No video path provided; redirectig to homepage.")
+		window.location.href = '/';
+	}
+	videoPath = getActualVideoUrl(videoPath);
+
+	var startTime = urlParams.get('time');
+
+	source.setAttribute('src', videoPath)
+	player.currentTime = startTime
+
+	player.addEventListener('pause', function(){
+		updateLinkHash()
+	});
+	player.addEventListener("playing", function () {
+	    //
+	});
+	player.addEventListener('seeked', updateLinkHash);
+
+	function updateLinkHash() {
+		var currentTime = player.currentTime
+		urlParams.set('time', currentTime)
+
+		var queryString = urlParams.toString();
+
+		window.location.replace('#' + queryString)
+	}
+
+	document.addEventListener('keydown', function(e){
+		if(e.repeat) {
+			console.log("Repeat event. Doing nothing.")
+			return;
+		}
+		console.log('down', e.code)
+
+		switch(e.code) {
+			case 'KeyB': // Skip backward
+				player.pause()
+				var timeToSkip = e.shiftKey ? 3 : .5
+				player.currentTime -= timeToSkip
+			break;
+			case 'KeyN': // Skip Forward
+				player.pause()
+				var timeToSkip = e.shiftKey ? 3 : .5
+				player.currentTime += timeToSkip
+			break;
+			case 'KeyS': // Slow Forward
+				var newRate = e.shiftKey ? .25 : .5
+				player.playbackRate = newRate
+
+				if(player.paused){
+					playerWasPaused = true;
+					player.play()
+				} else {
+					playerWasPaused = false
+				}
+			break;
+			case 'KeyF': // Fast forward
+				var newRate = e.shiftKey ? 3 : 1.5
+				player.playbackRate = newRate
+				
+				if(player.paused){
+					playerWasPaused = true;
+					player.play()
+				} else{
+					playerWasPaused = false
+				}
+			break;
+
+
+			default:
+			// code block
+		}
+	});
+	document.addEventListener('keyup', function(e){
+		
+		console.log('up', e.code)
+		console.log('was_paused', playerWasPaused)
+		switch(e.code) {
+			case 'KeyS':
+			case 'KeyF':
+				player.playbackRate = 1
+				if(playerWasPaused)
+					player.pause()
+			break;
+
+			default:
+			// code block
+		}
+	});
+
+	function getActualVideoUrl(videoPath) {
+		if(window.location.hostname.endsWith('.local')) {
+			return videoPath;
+		}
+
+		if(window.location.hostname.startsWith('vod.')) {
+			var hostname = window.location.hostname;	
+		} else {
+			var hostname = 'vod.' + window.location.hostname;	
+		}
+		
+
+		return `https://${hostname}.${videoPath}`;
+	}
+</script>
+<script type="module">
+	import { multiAngleSelector } from './js/multi-angle-video.js'
+	import { ui } from './js/multi-angle-video-ui.js'
+	
+	console.log("Angles loaded")
+
+		
+	multiAngleSelector(player)
+	ui(player)
+
+	if(window.location.host.includes('photon')) {
+		// Dev mode
+		
+	} else {
+		console.log("Not in dev mode.")
+	}
+</script>
+

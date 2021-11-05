@@ -1,0 +1,42 @@
+server {
+	listen 80 default_server;
+	#server_name yourdomain.com www.yourdomain.com;
+
+	listen 443 ssl;
+
+	root /vod-server/nginx_www;
+	index index.html index.htm index.php;
+
+	server_name _;
+
+	ssl_certificate /config/keys/cert.crt;
+	ssl_certificate_key /config/keys/cert.key;
+
+	client_max_body_size 0;
+
+	location /thumbnails/ {
+		alias /thumbnails/;
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+	location /video_files/ {
+		alias /video_files/;
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+	
+	location / {
+		try_files $uri $uri/ /index.html /index.php?$args =404;
+	}
+
+
+	location ~ \.php$ {
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_index index.php;
+		include /etc/nginx/fastcgi_params;
+	}
+
+	# Redirect non-https traffic to https
+    if ($scheme != "https") {
+        return 301 https://$host$request_uri;
+    }
+}

@@ -1,0 +1,156 @@
+body {font-family:  sans-serif; background: black; color: white}
+.video-card__title {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+}
+.video-card__duration, .video-preview__timestamp {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+}
+.video-card__author {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+}
+.video-card {
+    position: relative;
+    color: white;
+    aspect-ratio: 16/9;
+}
+.video-card__title, .video-card__duration, .video-preview__timestamp, .video-card__author {
+    background: #0000008a;
+    border-radius: 3px;
+    padding: 6px;
+}
+.video-card__thumbnail {
+    width: 100%;
+}
+
+.video-card__overlay-icon {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.video-card__overlay-icon__text {
+  font-size:  200%;
+  font-weight:  bold;
+  text-shadow: 1px 1px 4px black;
+}
+.video-card__overlay_preview-loading.lds-dual-ring::after {
+    border-color: white transparent white transparent;
+}
+
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+}
+@media (max-width: 62em) {
+  .video-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 30em) {
+  .video-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+@media (min-width: 1920px) {
+  .video-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.video-card.video-unplayable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  cursor: not-allowed;
+}
+
+.video-card.video-unplayable::after {
+  content: "Still Recording...";
+  display: block;
+  margin-top: auto;
+  font-size: 150%;
+  font-weight: bold;
+}
+
+.lds-dual-ring {
+  width: 140px;
+  height: 140px;
+  margin-top: auto;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  border: 6px solid red;
+  border-color: red transparent red transparent;
+  animation: lds-dual-ring 3s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+    color: white;
+  }
+  100% {
+    transform: rotate(360deg);
+    color: red;
+  }
+}
+
+.video-card__duration.still-recording {
+    animation: blinker 1s infinite;
+}
+  
+@keyframes blinker {
+    from { color: white; }
+    50% { color: white; }
+    to { color: red; }
+}
+
+.video-preview {
+  display: block;
+  position: absolute;
+  overflow: hidden;
+  /* This is temporary width and height, these'll be overriden when the source img is loaded.*/
+  /* If you already know size of a preview frame you can hardcode it here. */
+  aspect-ratio:  16/9;
+  border-radius: 3px;
+  width:  100%;
+/*  z-index: 100;*/
+  top: 0;
+}
+
+.video-preview__playhead {
+/*  z-index: 150;*/
+  width: 2px;
+  height: 100%;
+  background: #ddd;
+  position: absolute;
+  top: 0;
+  opacity: .6;
+  cursor: pointer;
+}
+
+.video-preview__sprite, .video-preview__canvas {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+/*  z-index:  120;*/
+}
