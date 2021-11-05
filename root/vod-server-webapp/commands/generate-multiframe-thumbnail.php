@@ -55,7 +55,7 @@ $lock->release();
 function getVideosNeedingThumbnails() {
 	writeToLog('Starting to generate thumbnail commands.');
 	
-	$path = __DIR__ . '/../../video_files/*.mp4';
+	$path = __DIR__ . '/../../video_files/*.{mp4,mov}';
 
 	$files = glob($path);
 	

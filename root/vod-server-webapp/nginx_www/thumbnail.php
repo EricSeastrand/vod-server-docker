@@ -42,7 +42,7 @@ $commands = getThumbCommandsFast();
 echo implode("\n", $commands);
 
 function getThumbCommands() {
-	$path = __DIR__ . '/video_files/*.mp4';
+	$path = __DIR__ . '/video_files/*.{mp4,mov}';
 	$currentTime=time();
 
 	$files = glob($path);
@@ -70,7 +70,7 @@ function getThumbCommands() {
 }
 
 function getThumbCommandsFast() {
-	$path = __DIR__ . '/video_files/*.mp4';
+	$path = __DIR__ . '/video_files/*.{mp4,mov}';
 	$currentTime=time();
 
 	$files = glob($path);
