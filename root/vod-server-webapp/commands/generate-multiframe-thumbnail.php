@@ -55,9 +55,11 @@ $lock->release();
 function getVideosNeedingThumbnails() {
 	writeToLog('Starting to generate thumbnail commands.');
 	
-	$path = __DIR__ . '/../../video_files/*.{mp4,mov}';
-
-	$files = glob($path);
+	$path = __DIR__ . '/../nginx_www/video_files/*.';
+	$files = array_merge(
+		glob($path . 'mp4'),
+		glob($path . 'mov')
+	);
 	
 	$videos = array_map(function($file){
 		$video = new TESTVideoFile($file);
@@ -166,7 +168,9 @@ class PidLock {
 
 	function __construct() {
 		$file = basename(__FILE__);
-		$this->pidFile = realpath(__DIR__."/../log/{$file}.pid");
+		$intendedLockFilePath = __DIR__."/../log/{$file}.pid";
+		#echo $intendedLockFilePath;
+		$this->pidFile = realpath($intendedLockFilePath);
 		echo "PID file: {$this->pidFile}\n";
 	}
 
