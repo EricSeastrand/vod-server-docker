@@ -1,6 +1,7 @@
 <?php
 
 require_once(__DIR__.'/VideoFilenameParser.php');
+require_once(__DIR__.'/ShellCommand.php');
 
 class VideoFile {
 	protected $filePath;
@@ -65,19 +66,21 @@ class VideoFile {
 			return $this->ffProbeResult;
 		}
 
-		$command = "ffprobe -v error -print_format json -show_format -show_streams {$this->getShellSafeFilePath()} 2>&1";
+		$command = "ffprobe -v error -print_format json -show_format -show_streams {$this->getShellSafeFilePath()}";
 
-		$result = shell_exec($command);
-		if(strpos($result, 'moov atom not found') !== false) {
+		$result = ShellCommand::run($command);
+		$output = $result['output'];
+		
+		if(strpos($output, 'moov atom not found') !== false) {
 			$this->fileIsUnplayable = true;
 			return [];
 		}
 		
-		$result = json_decode($result, true);
+		$output = json_decode($output, true);
 
-		$this->ffProbeResult = $result;
+		$this->ffProbeResult = $output;
 
-		return $result;
+		return $output;
 	}
 
 
@@ -94,11 +97,11 @@ class VideoFile {
 		$atTimeParam = escapeshellarg($atTime);
 		
 		//$command = "ffmpeg -i {$this->getShellSafeFilePath()} -ss {$atTimeParam} -frames:v 1 {$thumbnailArg} 2>&1";
-		$command = "ffmpeg -ss {$atTimeParam} -i {$this->getShellSafeFilePath()} -vf scale=720:-2 -frames:v 1 -q:v 10 -y {$thumbnailArg} 2>&1";
-		$result = exec($command, $output, $result_code);
-		if(isset($_GET['ffmpeg_debug'] )) {
-			print_r(compact('command', 'result_code', 'result', 'output'));
-		}
+		$command = "ffmpeg -ss {$atTimeParam} -i {$this->getShellSafeFilePath()} -vf scale=720:-2 -frames:v 1 -q:v 10 -y {$thumbnailArg}";
+		
+		$result = ShellCommand::run($command);
+		$result_code = $result['result_code'];
+
 		if(!$result_code == 0) {
 			trigger_error("Thumbnail creation failed with command: {$command}.", E_USER_WARNING);
 			return false;
