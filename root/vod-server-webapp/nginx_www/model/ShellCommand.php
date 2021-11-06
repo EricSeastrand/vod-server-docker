@@ -1,11 +1,11 @@
 <?php
 
 class ShellCommand {
-	public static $prefix = 'export LD_LIBRARY_PATH=/usr/lib:/lib && ';
+	public static $prefix = 'export LD_LIBRARY_PATH=/usr/lib:/lib &&';
 	public static $suffix = '2>&1';
 
-	function run($_command) {
-		$command = self::$prefix . $_command . self::$suffix;
+	public static function run($_command) {
+		$command = implode(' ', [self::$prefix, $_command, self::$suffix]);
 		$success = exec($command, $output, $result_code);
 		$result = compact('command', 'result_code', 'success', 'output');
 		if(isset($_GET['shell_debug'] )) {

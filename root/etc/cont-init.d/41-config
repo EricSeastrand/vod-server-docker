@@ -3,6 +3,10 @@
 cp -r /nginx-configs/* /config
 
 chown -R 1000:1000 /vod-server-webapp
+
+mkdir /thumbnails
 chown -R 1000:1000 /thumbnails
+
+mkdir /video_meta
 chown -R 1000:1000 /video_meta
 

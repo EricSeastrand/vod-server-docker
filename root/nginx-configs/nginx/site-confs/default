@@ -18,10 +18,6 @@ server {
 		alias /thumbnails/;
 		try_files $uri $uri/ /index.html /index.php?$args =404;
 	}
-	location /video_files/ {
-		alias /video_files/;
-		try_files $uri $uri/ /index.html /index.php?$args =404;
-	}
 	
 	location / {
 		try_files $uri $uri/ /index.html /index.php?$args =404;

@@ -69,7 +69,7 @@ class VideoFile {
 		$command = "ffprobe -v error -print_format json -show_format -show_streams {$this->getShellSafeFilePath()}";
 
 		$result = ShellCommand::run($command);
-		$output = $result['output'];
+		$output = implode("\n", $result['output']);
 		
 		if(strpos($output, 'moov atom not found') !== false) {
 			$this->fileIsUnplayable = true;
