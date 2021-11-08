@@ -183,7 +183,7 @@ async function initMultiFramePreview(parent, video, defaultMoveEvent) {
 	var dWidth = frameWidth
 	var dHeight = frameHeight
 	function scrubToFrame(frameNumber) {
-		context.drawImage(img, sx, (540 * frameNumber-1), sWidth, sHeight, dx, dy, dWidth, dHeight);
+		context.drawImage(img, sx, (frameHeight * frameNumber-1), sWidth, sHeight, dx, dy, dWidth, dHeight);
 	}
     var playhead = document.createElement('div')
     playhead.className = 'video-preview__playhead'

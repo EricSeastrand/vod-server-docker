@@ -59,9 +59,8 @@ function ui(player){
 			
 			anchor.className = 'multi-angle-video__selector'
 
-			if(angle.canPlayFromHere) {
-				anchor.addEventListener('click', angle.open)
-			} else {
+			anchor.addEventListener('click', angle.open)
+			if(!angle.canPlayFromHere) {
 				anchor.className += ' unavailable'
 				anchor.title = angle.canPlayFromHereError || 'Not Available'
 			}
