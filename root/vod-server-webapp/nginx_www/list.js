@@ -133,7 +133,10 @@ function formatVideoTitle(video) {
 	const videoTitle = video.title
 	const [date, time] = humanTimeString.split(' @ ')
 
-	return [time, date, videoTitle].join("<br/>")
+	let parts = [time, date, videoTitle]
+	parts = parts.filter(p => !!p) // Remove any empty strings.
+
+	return parts.join("<br/>")
 }
 
 async function initMultiFramePreview(parent, video, defaultMoveEvent) {
