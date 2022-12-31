@@ -101,6 +101,14 @@ if ($actualDate == '2022-05-02') {
 	test_log("Fail! We got {$actualDate} for date.");
 }
 
+test_log("Parsed filename datetime object has no stray time component");
+$timeFromDate = $parsedFilename['date']->format('H:i:s');
+if ($timeFromDate == '00:00:00') {
+	test_log("Pass!");
+} else {
+	test_log("Fail! We got {$timeFromDate} for time, but date should have no time component.");
+}
+
 test_log("Video Title is accurate");
 if ( $parsedFilename['title'] == "Milo and Mom play") {
 	test_log("Pass!");

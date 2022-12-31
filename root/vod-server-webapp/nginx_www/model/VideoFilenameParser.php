@@ -37,7 +37,7 @@ class VideoFilenameParser {
 		$cleanedTitle = trim($cleanedTitle);
 
 		return [
-			'date' => DateTime::createFromFormat('Y-m-d', $extractedDate, new DateTimeZone('CST')),
+			'date' => DateTime::createFromFormat('!Y-m-d', $extractedDate, new DateTimeZone('CST')),
 			'title' => $cleanedTitle,
 			'uploaded_by' => ''
 		];
