@@ -162,6 +162,11 @@ class VideoFile {
 			return '';
 		}
 
+		if($dateTime->format('H:i:s') === '00:00:00') {
+			// Date-only format.
+			return $dateTime->format('D M j Y');
+		}
+
 		return $dateTime->format('D M j Y @ g:i A T'); // Fri Sept 10 2021 9:16 PM CST
 	}
 
