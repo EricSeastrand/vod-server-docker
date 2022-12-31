@@ -27,9 +27,9 @@ function composeVideoCard(video) {
 	const title = document.createElement('div')
 	title.className = 'video-card__title'
 	if(video.human_time) {
-		title.innerHTML = reformatHumanTime(video.human_time)
+		title.innerHTML = formatVideoTitle(video)
 	}else {
-		title.textContent = video.file		
+		title.textContent = video.file
 	}
 
 	const author = document.createElement('div')
@@ -128,10 +128,12 @@ function updateRecordingTimeLive(video, timer) {
 }
 
 // ToDo: Return these separate from API? Or format locally for timezone conversion.
-function reformatHumanTime(humanTimeString) {
+function formatVideoTitle(video) {
+	const humanTimeString = video.human_time
+	const videoTitle = video.title
 	const [date, time] = humanTimeString.split(' @ ')
 
-	return time+"<br/>"+date
+	return [time, date, videoTitle].join("<br/>")
 }
 
 async function initMultiFramePreview(parent, video, defaultMoveEvent) {

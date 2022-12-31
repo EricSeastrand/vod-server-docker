@@ -128,6 +128,10 @@ class VideoFile {
 			'uploaded_by'=> $parsedFilename['uploaded_by']
 		];
 
+		if($parsedFilename['title']) {
+			$toReturn['title'] = $parsedFilename['title'];
+		}
+
 		$fullFfprobe = $this->getFullFfprobe();
 
 		if(!$this->fileIsUnplayable) {
@@ -150,15 +154,6 @@ class VideoFile {
 		}
 
 		return $toReturn;
-	}
-
-	function parseTimeFromFilename() {
-		// Example: 2021-09-10 19-37-36.mp4
-		$timeFromFile = pathinfo($this->filePath, PATHINFO_FILENAME);
-		
-		$dateTime = DateTime::createFromFormat('Y-m-d H-i-s', $timeFromFile, new DateTimeZone('CST'));
-		
-		return $dateTime;
 	}
 
 	function formatHumanDate($dateTime) {
