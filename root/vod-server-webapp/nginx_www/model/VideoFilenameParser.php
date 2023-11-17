@@ -18,10 +18,16 @@ class VideoFilenameParser {
 		list($uploadedBy, $timeInfo) = explode('-', $fileName, 2);
 
 		// New parsing - where we get the name of uploader from streamkey.
-		list($epochTime, $readableTime) = explode('.', $timeInfo);
+		list($epochTime, $readableTime, $timeZone) = explode('.', $timeInfo);
+
+		try {
+			$dateTimeZone = new DateTimeZone($timeZone);
+		} catch(Exception $e) {
+			$dateTimeZone = new DateTimeZone('UTC');
+		}
 		return [
 			// ToDo: Maybe should use epochtime instead since we have it..
-			'date' => DateTime::createFromFormat('Y-m-d_H-i-s', $readableTime, new DateTimeZone('CST')),
+			'date' => DateTime::createFromFormat('Y-m-d_H-i-s', $readableTime, $dateTimeZone),
 			'uploaded_by' => $uploadedBy
 		];
 	}

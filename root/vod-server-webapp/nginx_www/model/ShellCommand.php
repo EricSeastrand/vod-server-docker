@@ -8,9 +8,9 @@ class ShellCommand {
 		$command = implode(' ', [self::$prefix, $_command, self::$suffix]);
 		$success = exec($command, $output, $result_code);
 		$result = compact('command', 'result_code', 'success', 'output');
-		if(isset($_GET['shell_debug'] )) {
-			print_r($result);
-		}
+		// if(isset($_GET['shell_debug'] )) {
+		// 	print_r($result);
+		// }
 		if(!$result_code == 0) {
 			trigger_error("Shell command returned nonzero result_code: {$command}.", E_USER_WARNING);
 		}

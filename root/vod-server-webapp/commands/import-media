@@ -1,0 +1,35 @@
+
+
+import sys
+import os
+
+sys.stdout = open('/proc/1/fd/1', 'w') # This way, our print logs show up in Docker. But it requires running as root.
+
+temp_file_path = sys.argv[1]
+basename = os.path.basename(temp_file_path)
+
+print("Stream Complete for {}".format(temp_file_path))
+
+ffmpeg_command_parts = [
+	'ffmpeg',
+	'-i', temp_file_path,
+	'-codec', 'copy',
+	'-movflags', 'faststart',
+	'/video_storage/{}.mp4'.format(basename)
+]
+ffmpeg_command = ' '.join(ffmpeg_command_parts)
+
+print("Executing: {}".format(ffmpeg_command))
+
+# ToDo: Use Subprocess instead so we can see the output.
+result = os.system(ffmpeg_command)
+
+print("Command result was {}".format(result))
+
+if(result!=0):
+	print("Got a non-success status from ffmpeg. Exiting early.")
+	sys.exit(result)
+
+
+print("Deleting temp recording file now that offload is complete.")
+# os.remove(temp_file_path)

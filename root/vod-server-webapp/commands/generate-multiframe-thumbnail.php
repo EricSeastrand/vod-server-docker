@@ -52,14 +52,32 @@ generateThumbnails();
 
 $lock->release();
 
-function getVideosNeedingThumbnails() {
-	writeToLog('Starting to generate thumbnail commands.');
-	
+function getInputFileParam() {
+	if(!empty($argv[1])) {
+		return $argv[1];
+	}
+	return false;
+}
+
+function getInputFiles() {
+	$inputFileParam = getInputFileParam();
+
+	if($inputFileParam) {
+		return [$inputFileParam];
+	}
+
 	$path = __DIR__ . '/../nginx_www/video_files/*.';
 	$files = array_merge(
 		glob($path . 'mp4'),
 		glob($path . 'mov')
 	);
+	return $files;
+}
+
+function getVideosNeedingThumbnails() {
+	writeToLog('Starting to generate thumbnail commands.');
+	
+	$files = getInputFiles();
 	
 	$videos = array_map(function($file){
 		$video = new TESTVideoFile($file);

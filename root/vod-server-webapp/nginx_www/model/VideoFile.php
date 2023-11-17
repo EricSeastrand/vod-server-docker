@@ -128,7 +128,7 @@ class VideoFile {
 			'uploaded_by'=> $parsedFilename['uploaded_by']
 		];
 
-		if($parsedFilename['title']) {
+		if(@$parsedFilename['title']) {
 			$toReturn['title'] = $parsedFilename['title'];
 		}
 
