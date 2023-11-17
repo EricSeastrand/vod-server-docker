@@ -1,4 +1,3 @@
-console.log("test")
 
 var renderTarget = document.getElementById('render-target')
 
@@ -127,11 +126,29 @@ function updateRecordingTimeLive(video, timer) {
 	doTimedUpdate()
 }
 
-// ToDo: Return these separate from API? Or format locally for timezone conversion.
+function formatDateTime(epochtime) {
+	let dateTime = new Date(epochtime * 1000)
+	let date = Intl.DateTimeFormat('en', {
+		weekday: "short",
+		month: "short",
+		day: "numeric",
+		year: "numeric"
+	}).format(dateTime)
+	let time = Intl.DateTimeFormat('en', {
+		hour: 'numeric',
+		minute: 'numeric',
+		timeZoneName: 'short'
+	}).format(dateTime)
+
+	date = date.replaceAll(',', '')
+	
+	return {time, date}
+}
+
+
 function formatVideoTitle(video) {
-	const humanTimeString = video.human_time
+	const {time, date} = formatDateTime(video.timestamp)
 	const videoTitle = video.title
-	const [date, time] = humanTimeString.split(' @ ')
 
 	let parts = [time, date, videoTitle]
 	parts = parts.filter(p => !!p) // Remove any empty strings.
