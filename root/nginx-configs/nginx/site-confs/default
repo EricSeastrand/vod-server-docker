@@ -1,38 +1,47 @@
+map $request_uri $header_cache_control {
+    default           "no-cache";
+    ~*^/thumbnails/.+.jpe?g$       "max-age=31536000, immutable";
+    ~*^/video_files/.+.(mp4|mov)$  "max-age=31536000, immutable";
+}
+
+
 server {
-	listen 80 default_server;
-	#server_name yourdomain.com www.yourdomain.com;
+    listen 80 default_server;
+    listen 443 ssl;
 
-	listen 443 ssl;
+    #server_name yourdomain.com www.yourdomain.com;
 
-	root /vod-server-webapp/nginx_www;
-	index index.html index.htm index.php;
+    root /vod-server-webapp/nginx_www;
+    index index.html index.htm index.php;
 
-	server_name _;
+    server_name _;
 
-	ssl_certificate /config/keys/cert.crt;
-	ssl_certificate_key /config/keys/cert.key;
+    ssl_certificate /config/keys/cert.crt;
+    ssl_certificate_key /config/keys/cert.key;
 
-	client_max_body_size 0;
+    client_max_body_size 0;
 
-	location /thumbnails/ {
-		alias /thumbnails/;
-		try_files $uri $uri/ /index.html /index.php?$args =404;
-	}
-	
-	location / {
-		try_files $uri $uri/ /index.html /index.php?$args =404;
-	}
+    location /thumbnails/ {
+        alias /thumbnails/;
+        try_files $uri $uri/ /index.html /index.php?$args =404;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.html /index.php?$args =404;
+    }
 
 
-	location ~ \.php$ {
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		fastcgi_pass 127.0.0.1:9000;
-		fastcgi_index index.php;
-		include /etc/nginx/fastcgi_params;
-	}
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include /etc/nginx/fastcgi_params;
+    }
 
-	# Redirect non-https traffic to https
+    # Redirect non-https traffic to https
     if ($scheme != "https") {
         return 301 https://$host$request_uri;
     }
+    # See map at top of file.
+    add_header Cache-Control: $header_cache_control;
 }

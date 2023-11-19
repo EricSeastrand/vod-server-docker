@@ -187,19 +187,15 @@ Tip: Hold <kbd>Shift</kbd> with any shortcut to make it more extreme.
 			// code block
 		}
 	});
-
+	
 	function getActualVideoUrl(videoPath) {
-		if(window.location.hostname.endsWith('.local')) {
-			return videoPath;
+		var VODS_CDN_ENABLE = window.location.hostname == 'defplayswow.com'
+		if(!VODS_CDN_ENABLE){
+			return videoPath
 		}
 
-		if(window.location.hostname.startsWith('vod.')) {
-			var hostname = window.location.hostname;	
-		} else {
-			var hostname = 'vod.' + window.location.hostname;	
-		}
+		var hostname = 'vod.' + window.location.hostname;
 		
-
 		return `https://${hostname}${videoPath}`;
 	}
 </script>

@@ -18,7 +18,7 @@ class VideoFilenameParser {
 		list($uploadedBy, $timeInfo) = explode('-', $fileName, 2);
 
 		// New parsing - where we get the name of uploader from streamkey.
-		list($epochTime, $readableTime, $timeZone) = explode('.', $timeInfo);
+		@list($epochTime, $readableTime, $timeZone) = explode('.', $timeInfo);
 
 		try {
 			$dateTimeZone = new DateTimeZone($timeZone);

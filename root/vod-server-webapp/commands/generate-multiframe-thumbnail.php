@@ -26,10 +26,11 @@ class TESTVideoFile extends VideoFile {
 		$COLS=1;
 		$ROWS=$framesToExtract;
 
-		$HEIGHT = $firstVideoStream['height'] / 2;
+		$WIDTH = 720; #$firstVideoStream['width'] / 4;
+		$SCALE_PARAM = "$WIDTH:-2";
 
 		// Copied from https://www.binpress.com/generate-video-previews-ffmpeg/
-		$command = "ffmpeg -loglevel panic -i $MOVIE -y -frames 1 -q:v 1 -vf 'select=not(mod(n\,$NTH_FRAME)),scale=-1:$HEIGHT,tile={$COLS}x{$ROWS}' $OUT_FILEPATH";
+		$command = "ffmpeg -loglevel panic -i $MOVIE -y -frames 1 -q:v 1 -vf 'select=not(mod(n\,$NTH_FRAME)),scale=$SCALE_PARAM,tile={$COLS}x{$ROWS}' $OUT_FILEPATH";
 
 		return $command;
 	}
@@ -116,7 +117,7 @@ function runCommand($ffMpegCommand) {
 		print_r($commandResult);
 	}
 	if(!$result_code == 0) {
-		logWarning("Thumbnail creation failed with command: {$command}.");
+		logWarning("Thumbnail creation failed with command: {$ffMpegCommand}.");
 		return false;
 	}
 
