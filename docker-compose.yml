@@ -2,16 +2,17 @@ version: "2.1"
 services:
   nginx:
     build: .
-    container_name: vod-server
+    container_name: vod-server-dev
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=3010
+      - PGID=3010
       - TZ=America/Chicago
     volumes:
-      - /docker-files/build-tests/storage/config:/config
-      - /docker-files/build-tests/storage/thumbnails:/thumbnails
-      - /docker-files/build-tests/storage/video_meta:/video_meta
+      - /docker-persistent/wow-videos/video_files:/vod-server-webapp/nginx_www/video_files
+      # - /docker-files/build-tests/storage/config:/config
+      # - /docker-files/build-tests/storage/thumbnails:/thumbnails
+      # - /docker-files/build-tests/storage/video_meta:/video_meta
     ports:
-      - 18080:80
-      - 18443:443
+      - 19080:80
+      - 19443:443
 #    restart: unless-stopped

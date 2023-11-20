@@ -1,11 +1,10 @@
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx:2021.11.04
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.18-version-d20967b0
 
 
 RUN \
   echo "**** install runtime packages ****" && \
   apk add --no-cache \
-    ffmpeg \
-    php7-json
+    ffmpeg
 
 
 # add local files

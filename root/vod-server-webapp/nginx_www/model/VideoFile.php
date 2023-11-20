@@ -84,8 +84,8 @@ class VideoFile {
 	}
 
 
-	function getThumbnail($atTime = 1 /* seconds */) {
-		$thumbnailFilename = "{$this->fileName}.thumb.jpg";
+	function getThumbnail($atTime = 0 /* seconds */) {
+		$thumbnailFilename = "{$this->fileName}.thumb.avif";
 		//$thumbnailPath = "{$this->fileDir}/$thumbnailFilename";
 		$thumbnailPath = "/thumbnails/$thumbnailFilename";
 
@@ -96,8 +96,10 @@ class VideoFile {
 
 		$atTimeParam = escapeshellarg($atTime);
 		
-		//$command = "ffmpeg -i {$this->getShellSafeFilePath()} -ss {$atTimeParam} -frames:v 1 {$thumbnailArg} 2>&1";
-		$command = "ffmpeg -ss {$atTimeParam} -i {$this->getShellSafeFilePath()} -vf scale=720:-2 -frames:v 1 -q:v 10 -y {$thumbnailArg}";
+		# Old command for generating jpgs
+		# $command = "ffmpeg -ss {$atTimeParam} -i {$this->getShellSafeFilePath()} -vf scale=720:-2 -frames:v 1 -q:v 10 -y {$thumbnailArg}";
+
+		$command = "ffmpeg -ss {$atTimeParam} -i {$this->getShellSafeFilePath()} -vf scale=720:-2 -frames:v 1 -crf 34 -y {$thumbnailArg}";
 		
 		$result = ShellCommand::run($command);
 		$result_code = $result['result_code'];

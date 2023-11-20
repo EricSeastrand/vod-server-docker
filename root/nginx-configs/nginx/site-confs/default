@@ -1,3 +1,5 @@
+## Version 2023/04/13 - Changelog: https://github.com/linuxserver/docker-baseimage-alpine-nginx/commits/master/root/defaults/nginx/site-confs/default.conf.sample
+
 map $request_uri $header_cache_control {
     default           "no-cache";
     ~*^/thumbnails/.+.jpe?g$       "max-age=31536000, immutable";
