@@ -8,10 +8,12 @@ services:
       - PGID=3010
       - TZ=America/Chicago
     volumes:
+      - ./root/etc/cont-init.d/41-config:/etc/cont-init.d/41-config
+      - ./root/nginx-configs/nginx/site-confs/default.conf:/config/nginx/site-confs/default.conf
+      - ./root/vod-server-webapp:/vod-server-webapp
       - /docker-persistent/wow-videos/video_files:/vod-server-webapp/nginx_www/video_files
-      # - /docker-files/build-tests/storage/config:/config
-      # - /docker-files/build-tests/storage/thumbnails:/thumbnails
-      # - /docker-files/build-tests/storage/video_meta:/video_meta
+      - /docker-persistent/wow-videos/thumbnails:/thumbnails
+      #- /docker-persistent/wow-videos/video_meta:/video_meta
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
     ports:
