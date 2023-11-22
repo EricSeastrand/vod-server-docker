@@ -17,22 +17,46 @@ class TESTVideoFile extends VideoFile {
 
 		$framesInVideo = $firstVideoStream['nb_frames'];
 
-		$thumbnailFilename = "{$this->fileName}.preview.{$framesToExtract}.jpg";
+		$thumbnailFilename = "{$this->fileName}.preview.{$framesToExtract}.avif";
+		$thumbnailFilenamePng = "{$this->fileName}.preview.{$framesToExtract}.png";
 		$thumbnailPath = "/thumbnails/$thumbnailFilename";
+		$thumbnailPathPng = "/thumbnails/$thumbnailFilenamePng";
+
 		
-		$MOVIE = $this->getShellSafeFilePath();
+		$videoFilePath = $this->getShellSafeFilePath();
 		$NTH_FRAME = floor($framesInVideo/$framesToExtract);
-		$OUT_FILEPATH  = escapeshellarg($thumbnailPath);
 		$COLS=1;
 		$ROWS=$framesToExtract;
 
-		$WIDTH = 720; #$firstVideoStream['width'] / 4;
-		$SCALE_PARAM = "$WIDTH:-2";
+		$WIDTH = 720;
 
-		// Copied from https://www.binpress.com/generate-video-previews-ffmpeg/
-		$command = "ffmpeg -loglevel panic -i $MOVIE -y -frames 1 -q:v 1 -vf 'select=not(mod(n\,$NTH_FRAME)),scale=$SCALE_PARAM,tile={$COLS}x{$ROWS}' $OUT_FILEPATH";
+		# Copied from https://www.binpress.com/generate-video-previews-ffmpeg/
+		$ffmpegCommand = implode(' ', [
+			'ffmpeg', '-y',
+			#'-loglevel panic',
+			'-hwaccel qsv -c:v h264_qsv',
+			'-i', $videoFilePath,
+			'-vframes 1',
+			"-vf 'select=not(mod(n\,$NTH_FRAME)),scale_qsv=w=$WIDTH:h=-1,hwdownload,format=nv12,tile={$COLS}x{$ROWS}'",
+			"-q:v 0",
+			escapeshellarg($thumbnailPathPng)
+		]);
+		
+		# https://web.dev/articles/compress-images-avif
+		$avifQuality = 44;// lossless 0 to 63 compressed
+		$avifCommand = implode(' ', [
+			"avifenc",
+			"-y 420", # 4:2:0 chroma - like the original video
+			"--jobs all", # Use all cores
+			"--min 40 --max 63", # Quality settings I don't fully understand.
+			"-a end-usage=q -a cq-level=$avifQuality",
+			"-a tune=ssim",
+			escapeshellarg($thumbnailPathPng),
+			escapeshellarg($thumbnailPath)
+		]);
 
-		return $command;
+		
+		return "$ffmpegCommand && $avifCommand";
 	}
 }
 

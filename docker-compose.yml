@@ -12,6 +12,8 @@ services:
       # - /docker-files/build-tests/storage/config:/config
       # - /docker-files/build-tests/storage/thumbnails:/thumbnails
       # - /docker-files/build-tests/storage/video_meta:/video_meta
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     ports:
       - 19080:80
       - 19443:443

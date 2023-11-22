@@ -195,7 +195,7 @@ class VideoFile {
 
 	function getScenesThumbnails() {
 		$framesToExtract = 50;
-		$thumbnailFilename = "{$this->fileName}.preview.{$framesToExtract}.jpg";
+		$thumbnailFilename = "{$this->fileName}.preview.{$framesToExtract}.avif";
 		$thumbnailPath = "/thumbnails/$thumbnailFilename";
 
 		if(!file_exists($thumbnailPath)) {
