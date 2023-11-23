@@ -54,7 +54,6 @@ class TESTVideoFile extends VideoFile {
 			escapeshellarg($thumbnailPathPng),
 			escapeshellarg($thumbnailPath)
 		]);
-
 		
 		return "$ffmpegCommand && $avifCommand";
 	}

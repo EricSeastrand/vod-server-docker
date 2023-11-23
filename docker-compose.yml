@@ -7,6 +7,7 @@ services:
       - PUID=3010
       - PGID=3010
       - TZ=America/Chicago
+      - RENDER_GID=105 # Intel Quicksync creates this group; need the ID. Tip: `stat /dev/dri/renderD128`
     volumes:
       - ./root/etc/cont-init.d/41-config:/etc/cont-init.d/41-config
       - ./root/nginx-configs/nginx/site-confs/default.conf:/config/nginx/site-confs/default.conf

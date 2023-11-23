@@ -10,3 +10,6 @@ chown -R $PUID:$PGID /thumbnails
 mkdir /video_meta
 chown -R $PUID:$PGID /video_meta
 
+# Set up render group for intel qsv permission
+groupadd -g $RENDER_GID render
+usermod -a -G render $PUID
