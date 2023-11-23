@@ -40,13 +40,13 @@ class BackendCommand {
 		$out = [];
 		
 		# Remux into mp4, Fix the moov atom to be at beginning of file.
-		$ffmpegCommand = join([
+		$ffmpegCommand = join(' ', [
 			'ffmpeg',
 			'-i', $SAFE_inputFile,
 			'-codec', 'copy',
 			'-movflags', 'faststart',
 			$SAFE_destinationFile
-		], ' ');
+		]);
 
 		$result = ShellCommand::run($ffmpegCommand);
 		$out[] = $result;
