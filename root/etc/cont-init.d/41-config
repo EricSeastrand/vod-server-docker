@@ -4,12 +4,15 @@ cp -r /nginx-configs/* /config
 
 chown -R $PUID:$PGID /vod-server-webapp
 
-mkdir /thumbnails
+echo "Ensuring thumbnails dir exists"
+mkdir -P /thumbnails
 chown -R $PUID:$PGID /thumbnails
 
-mkdir /video_meta
+echo "Ensuring video_meta dir exists"
+mkdir -P /video_meta
 chown -R $PUID:$PGID /video_meta
 
 # Set up render group for intel qsv permission
+echo "Adding uid=$PUID to 'render' group with gid=$RENDER_GID"
 groupadd -g $RENDER_GID render
-usermod -a -G render $PUID
+usermod -a -G render abc
