@@ -36,7 +36,7 @@ async function multiAngleSelector(videoElement) {
 		const myFile = filesWithOverlap.find(f => f.file == videoFile)
 
 		var angles = filesWithOverlap.map(function(otherFile) {
-			const startTimeOffset = otherFile.timestamp - myFile.timestamp
+			const startTimeOffset = myFile.timestamp - otherFile.timestamp
 
 			const angle = {'file' : otherFile, canPlayFromHere: true}
 
