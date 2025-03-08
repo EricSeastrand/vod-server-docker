@@ -17,6 +17,8 @@ class TESTVideoFile extends VideoFile {
 
 		$framesInVideo = $firstVideoStream['nb_frames'];
 
+		$codec = $firstVideoStream['codec_name']; // Can be one of av1 h264 h265
+
 		$thumbnailFilename = "{$this->fileName}.preview.{$framesToExtract}.avif";
 		$thumbnailFilenamePng = "{$this->fileName}.preview.{$framesToExtract}.png";
 		$thumbnailPath = "/thumbnails/$thumbnailFilename";
@@ -30,14 +32,24 @@ class TESTVideoFile extends VideoFile {
 
 		$WIDTH = 720;
 
+		$scalingStrategy = "scale_qsv=w=$WIDTH:h=-1,hwdownload,format=nv12"; #May change if quicksync unavailable or we want to support nvdec
+		if($codec == "av1") {
+			$decodeStrategy = '-hwaccel qsv -c:v av1_qsv';
+		} else if($codec == 'h264') {
+			$decodeStrategy = '-hwaccel qsv -c:v h264_qsv';
+		} else if($codec == 'h265') {
+			$decodeStrategy = '-hwaccel qsv -c:v h265_qsv';
+		}
+		
+
 		# Copied from https://www.binpress.com/generate-video-previews-ffmpeg/
 		$ffmpegCommand = implode(' ', [
 			'ffmpeg', '-y',
 			#'-loglevel panic',
-			'-hwaccel qsv -c:v h264_qsv',
+			$decodeStrategy,
 			'-i', $videoFilePath,
 			'-vframes 1',
-			"-vf 'select=not(mod(n\,$NTH_FRAME)),scale_qsv=w=$WIDTH:h=-1,hwdownload,format=nv12,tile={$COLS}x{$ROWS}'",
+			"-vf 'select=not(mod(n\,$NTH_FRAME)),$scalingStrategy,tile={$COLS}x{$ROWS}'",
 			"-q:v 0",
 			escapeshellarg($thumbnailPathPng)
 		]);
@@ -165,6 +177,7 @@ function generateThumbnails() {
 			$successes++;
 			$video->getMetadata(true /*force refresh cached metadata */);
 		}
+
 	}
 	
 	writeToLog("Process completed after processing {$totalVideos}. Successes: {$successes}");
