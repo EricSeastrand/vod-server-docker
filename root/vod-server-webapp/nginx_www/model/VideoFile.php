@@ -49,6 +49,14 @@ class VideoFile {
 		];
 	}
 
+	function getEncoding() {
+		$firstVideoStream = $this->getFirstVideoStream();
+
+		return [
+			'codec_name' => $firstVideoStream['codec_name']
+		];
+	}
+
 	function getFramerate() {
 		$firstVideoStream = $this->getFirstVideoStream();
 
@@ -141,8 +149,9 @@ class VideoFile {
 				'length'     => $this->getLength(),
 				'thumb'      => $this->getThumbnail(),
 				'resolution' => $this->getResolution(),
+				'encoding'   => $this->getEncoding(),
 				'fps'        => $this->getFramerate(),
-				'scenes'     => $this->getScenesThumbnails()
+				'scenes'     => $this->getScenesThumbnails(),
 			];
 			$videoData['end_timestamp'] = $toReturn['timestamp'] + $videoData['length'];
 			$toReturn = array_merge($toReturn, $videoData);
